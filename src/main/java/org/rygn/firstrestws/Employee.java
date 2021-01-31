@@ -23,4 +23,21 @@ public class Employee {
 		this.name = name;
 		this.role = role;
 	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public String getRole() {
+		return this.role;
+	}
+
+	public void setName(String name2) {
+		this.name = name2;
+		
+	}
+
+	public void setRole(String role2) {
+		this.role = role2;
+	}
 }
