@@ -1,5 +1,8 @@
 package org.rygn.firstrestws;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,9 +18,11 @@ public class LoadDatabase {
 	CommandLineRunner initDatabase(EmployeeRepository repository) {
 		return args -> {
 			
-			log.info("Preloading " + repository.save(new Employee("Bilbo Baggins", "burglar")));
+			Logger logger = Logger.getLogger("logger");
+			logger.log(Level.INFO,"Preloading " + repository.save(new Employee("Bilbo Baggins", "burglar")));
 			
-			log.info("Preloading " + repository.save(new Employee("Frodo Baggins", "thief")));
+			logger.log(Level.INFO,"Preloading " + repository.save(new Employee("Frodo Baggins", "thief")));
 		};
 	}
 }
+
