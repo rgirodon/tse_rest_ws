@@ -1,10 +1,8 @@
-package app.test;
+package ws_rest_tse.test;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Collection;
-
-import org.hamcrest.Matchers;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -18,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -27,66 +26,67 @@ import ws_rest_tse.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("Test")
 public class JoueurControllerTest {
 
 	@Autowired
 	private MockMvc mvc;
 	
 	@Autowired
-	private JoueurRepository employeeRepository;
+	private JoueurRepository joueurRepository;
 
 	@Test
 	public void testAll() throws Exception {
 		mvc.perform(
 				MockMvcRequestBuilders
-				.get("/employees")
+				.get("/Joueurs")
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			    .andExpect(jsonPath("$.length()", is(2)))
-			    .andExpect(jsonPath("$[?(@.name == 'Bilbo Baggins')].role", Matchers.contains("burglar")));
-	}
+			    .andExpect(jsonPath("$.length()", is(5)));
+		}
 	
 	@Test
 	public void testOne() throws Exception {
 		mvc.perform(
 				MockMvcRequestBuilders
-				.get("/employees/1")
+				.get("/Joueurs/1")
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-			    .andExpect(jsonPath("$.name", is("Bilbo Baggins")))
-			    .andExpect(jsonPath("$.role", is("burglar")));
+			    .andExpect(jsonPath("$.name", is("Stéphane Ruffier")))
+			    .andExpect(jsonPath("$.role", is("Gardien de but")))
+			    .andExpect(jsonPath("$.team", is("Association sportive de Saint-Étienne")));
 	}
 	
 	@Test
-	public void testNewEmployee() throws Exception {
+	public void testNewJoueur() throws Exception {
 		
-		Joueur employee = new Joueur("Rémy Girodon", "developer", null);
+		Joueur joueur = new Joueur("Rémy Girodon", "Coach", "Association sportive de Saint-Étienne");
 		
 		ObjectMapper mapper = new ObjectMapper();
-        byte[] employeeAsBytes = mapper.writeValueAsBytes(employee);
+        byte[] joueurAsBytes = mapper.writeValueAsBytes(joueur);
 		
 		mvc.perform(
 				MockMvcRequestBuilders
-				.post("/employees")
+				.post("/Joueurs")
 				.accept(MediaType.APPLICATION_JSON)
-				.contentType(MediaType.APPLICATION_JSON).content(employeeAsBytes))
+				.contentType(MediaType.APPLICATION_JSON).content(joueurAsBytes))
 				.andExpect(status().isOk());
 		
-		assertEquals(3, employeeRepository.count());
+		assertEquals(6, joueurRepository.count());
 		
-		Collection<Joueur> employees = employeeRepository.findAll();
+		Collection<Joueur> Joueurs = joueurRepository.findAll();
 		
 		boolean found = false;
 		
-		for (Joueur currentEmployee : employees) {
+		for (Joueur currentJoueur : Joueurs) {
 			
-			if (currentEmployee.getName().equals("Rémy Girodon")) {
+			if (currentJoueur.getName().equals("Rémy Girodon")) {
 				
 				found = true;
 				
-				employeeRepository.delete(currentEmployee);
+				joueurRepository.delete(currentJoueur);
 			}
 		}
 		
@@ -94,17 +94,17 @@ public class JoueurControllerTest {
 	}
 	
 	@Test
-	public void testDeleteEmployee() throws Exception {
+	public void testDeleteJoueur() throws Exception {
 		
-		Joueur employee = new Joueur("Rémy Girodon", "developer", null);
+		Joueur joueur = new Joueur("Rémy Girodon", "Coach", "Association sportive de Saint-Étienne");
 		
-		employeeRepository.save(employee);
+		joueurRepository.save(joueur);
 		
-		Collection<Joueur> employees = employeeRepository.findAll();
+		Collection<Joueur> Joueurs = joueurRepository.findAll();
 		
 		Long id = 0L;
 		
-		for (Joueur currentEmployee : employees) {
+		for (Joueur currentEmployee : Joueurs) {
 			
 			if (currentEmployee.getName().equals("Rémy Girodon")) {
 				
@@ -114,35 +114,35 @@ public class JoueurControllerTest {
 		
 		mvc.perform(
 				MockMvcRequestBuilders
-				.delete("/employees/" + id)
+				.delete("/Joueurs/" + id)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 		
-		assertEquals(2, employeeRepository.count());
+		assertEquals(5, joueurRepository.count());
 	}
 	
 	@Test
-	public void testReplaceEmployee() throws Exception {
+	public void testReplaceJoueur() throws Exception {
 		
-		Joueur employee = new Joueur("Bilbo Baggins", "vendor", null);
+		Joueur joueur = new Joueur("Wesley Fofana", "Milieu", "Association sportive de Saint-Étienne");
 		
 		ObjectMapper mapper = new ObjectMapper();
-        byte[] employeeAsBytes = mapper.writeValueAsBytes(employee);
+        byte[] employeeAsBytes = mapper.writeValueAsBytes(joueur);
         
         mvc.perform(
 				MockMvcRequestBuilders
-				.put("/employees/1")
+				.put("/Joueurs/2")
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON).content(employeeAsBytes))
 				.andExpect(status().isOk());
         
-        employee = employeeRepository.findById(1L).orElse(null);
+        joueur = joueurRepository.findById(2L).orElse(null);
         
-        if (employee == null) {
+        if (joueur == null) {
         	
-        	fail("Employee not found");
+        	fail("Joueur not found");
         }
         
-        assertEquals("vendor", employee.getRole());
+        assertEquals("Milieu", joueur.getRole());
 	}
 }

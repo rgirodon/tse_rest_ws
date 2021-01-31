@@ -21,7 +21,7 @@ public class Equipe {
 		
 	}
 	
-	Equipe(String name, String competition){
+	public Equipe(String name, String competition){
 		this.name = name;
 		this.competition = competition;
 	}
