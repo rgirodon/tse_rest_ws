@@ -1,4 +1,4 @@
-package org.rygn.firstrestws;
+package ws_rest_tse;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

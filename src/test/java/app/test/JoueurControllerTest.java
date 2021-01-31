@@ -1,4 +1,4 @@
-package org.rygn.firstrestws;
+package app.test;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,15 +23,17 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ws_rest_tse.*;
+
 @SpringBootTest
 @AutoConfigureMockMvc
-public class EmployeeControllerTest {
+public class JoueurControllerTest {
 
 	@Autowired
 	private MockMvc mvc;
 	
 	@Autowired
-	private EmployeeRepository employeeRepository;
+	private JoueurRepository employeeRepository;
 
 	@Test
 	public void testAll() throws Exception {
@@ -60,7 +62,7 @@ public class EmployeeControllerTest {
 	@Test
 	public void testNewEmployee() throws Exception {
 		
-		Employee employee = new Employee("Rémy Girodon", "developer");
+		Joueur employee = new Joueur("Rémy Girodon", "developer", null);
 		
 		ObjectMapper mapper = new ObjectMapper();
         byte[] employeeAsBytes = mapper.writeValueAsBytes(employee);
@@ -74,11 +76,11 @@ public class EmployeeControllerTest {
 		
 		assertEquals(3, employeeRepository.count());
 		
-		Collection<Employee> employees = employeeRepository.findAll();
+		Collection<Joueur> employees = employeeRepository.findAll();
 		
 		boolean found = false;
 		
-		for (Employee currentEmployee : employees) {
+		for (Joueur currentEmployee : employees) {
 			
 			if (currentEmployee.getName().equals("Rémy Girodon")) {
 				
@@ -94,15 +96,15 @@ public class EmployeeControllerTest {
 	@Test
 	public void testDeleteEmployee() throws Exception {
 		
-		Employee employee = new Employee("Rémy Girodon", "developer");
+		Joueur employee = new Joueur("Rémy Girodon", "developer", null);
 		
 		employeeRepository.save(employee);
 		
-		Collection<Employee> employees = employeeRepository.findAll();
+		Collection<Joueur> employees = employeeRepository.findAll();
 		
 		Long id = 0L;
 		
-		for (Employee currentEmployee : employees) {
+		for (Joueur currentEmployee : employees) {
 			
 			if (currentEmployee.getName().equals("Rémy Girodon")) {
 				
@@ -122,7 +124,7 @@ public class EmployeeControllerTest {
 	@Test
 	public void testReplaceEmployee() throws Exception {
 		
-		Employee employee = new Employee("Bilbo Baggins", "vendor");
+		Joueur employee = new Joueur("Bilbo Baggins", "vendor", null);
 		
 		ObjectMapper mapper = new ObjectMapper();
         byte[] employeeAsBytes = mapper.writeValueAsBytes(employee);
