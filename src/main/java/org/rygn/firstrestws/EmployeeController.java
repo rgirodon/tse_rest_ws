@@ -2,6 +2,7 @@ package org.rygn.firstrestws;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,11 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class EmployeeController {
 
-	private final EmployeeRepository repository;
-
+	@Autowired
+	private EmployeeRepository repository;
   
-	EmployeeController(EmployeeRepository repository) {
-		this.repository = repository;
+	public EmployeeController() {
 	}
 	
 	@GetMapping("/employees")
@@ -27,6 +27,7 @@ public class EmployeeController {
 	
 	@PostMapping("/employees")
 	Employee newEmployee(@RequestBody Employee newEmployee) {
+		
 	    return repository.save(newEmployee);
 	}
 	
@@ -43,7 +44,7 @@ public class EmployeeController {
 	
 	@PutMapping("/employees/{id}")
 	Employee replaceEmployee(@RequestBody Employee newEmployee, @PathVariable Long id) {
-
+		/*
 		return repository.findById(id)
 	      .map(employee -> {
 	        employee.setName(newEmployee.getName());
@@ -51,5 +52,13 @@ public class EmployeeController {
 	        return repository.save(employee);
 	      })
 	      .orElseThrow(() -> new EmployeeNotFoundException(id));
+	      */
+		
+		Employee foundEmployee = repository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
+		
+		foundEmployee.setName(newEmployee.getName());
+		foundEmployee.setRole(newEmployee.getRole());
+		
+		return repository.save(foundEmployee);
 	}
 }

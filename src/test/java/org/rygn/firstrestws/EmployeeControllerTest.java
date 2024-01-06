@@ -42,7 +42,7 @@ public class EmployeeControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 			    .andExpect(jsonPath("$.length()", is(2)))
-			    .andExpect(jsonPath("$[?(@.name == 'Bilbo Baggins')].role", Matchers.contains("burglar")));
+			    .andExpect(jsonPath("$[?(@.name == 'Bilbo Baggins')].role", Matchers.contains("maçon")));
 	}
 	
 	@Test
@@ -54,7 +54,7 @@ public class EmployeeControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 			    .andExpect(jsonPath("$.name", is("Bilbo Baggins")))
-			    .andExpect(jsonPath("$.role", is("burglar")));
+			    .andExpect(jsonPath("$.role", is("maçon")));
 	}
 	
 	@Test
@@ -69,7 +69,8 @@ public class EmployeeControllerTest {
 				MockMvcRequestBuilders
 				.post("/employees")
 				.accept(MediaType.APPLICATION_JSON)
-				.contentType(MediaType.APPLICATION_JSON).content(employeeAsBytes))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(employeeAsBytes))
 				.andExpect(status().isOk());
 		
 		assertEquals(3, employeeRepository.count());
@@ -81,6 +82,8 @@ public class EmployeeControllerTest {
 		for (Employee currentEmployee : employees) {
 			
 			if (currentEmployee.getName().equals("Rémy Girodon")) {
+				
+				assertEquals("developer", currentEmployee.getRole());
 				
 				found = true;
 				
@@ -142,5 +145,9 @@ public class EmployeeControllerTest {
         }
         
         assertEquals("vendor", employee.getRole());
+        
+        employee.setRole("maçon");
+
+        employeeRepository.save(employee);
 	}
 }
