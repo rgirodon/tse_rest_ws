@@ -1,16 +1,7 @@
 package org.rygn.firstrestws;
 
-
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-
-@Entity
 public class Employee {
 
-	@Id 
-	@GeneratedValue
 	private Long id;
   
 	private String name;
@@ -20,7 +11,8 @@ public class Employee {
 	Employee() {		
 	}
 
-	Employee(String name, String role) {
+	Employee(Long id, String name, String role) {
+		this.id = id;
 		this.name = name;
 		this.role = role;
 	}

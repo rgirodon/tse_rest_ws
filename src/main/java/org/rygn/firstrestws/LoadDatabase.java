@@ -20,9 +20,9 @@ public class LoadDatabase {
 	CommandLineRunner initDatabase(EmployeeRepository repository) {
 		return args -> {
 			
-			this.log.info("Preloading " + repository.save(new Employee("Bilbo Baggins", "maçon")));
+			this.log.info("Preloading " + repository.save(new Employee(1L, "Bilbo Baggins", "maçon")));
 			
-			this.log.info("Preloading " + repository.save(new Employee("Frodo Baggins", "infirmier")));
+			this.log.info("Preloading " + repository.save(new Employee(2L, "Frodo Baggins", "infirmier")));
 		};
 	}
 }

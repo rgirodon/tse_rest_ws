@@ -34,7 +34,12 @@ public class EmployeeController {
 	@GetMapping("/employees/{id}")
 	Employee one(@PathVariable Long id) {
 
-		return repository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
+		Employee result = repository.findById(id);
+		
+		if (result == null)
+			throw new EmployeeNotFoundException(id);
+		else
+			return result;
 	}
 	
 	@DeleteMapping("/employees/{id}")
@@ -44,21 +49,16 @@ public class EmployeeController {
 	
 	@PutMapping("/employees/{id}")
 	Employee replaceEmployee(@RequestBody Employee newEmployee, @PathVariable Long id) {
-		/*
-		return repository.findById(id)
-	      .map(employee -> {
-	        employee.setName(newEmployee.getName());
-	        employee.setRole(newEmployee.getRole());
-	        return repository.save(employee);
-	      })
-	      .orElseThrow(() -> new EmployeeNotFoundException(id));
-	      */
+
+		Employee foundEmployee = repository.findById(id);
 		
-		Employee foundEmployee = repository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
-		
-		foundEmployee.setName(newEmployee.getName());
-		foundEmployee.setRole(newEmployee.getRole());
-		
-		return repository.save(foundEmployee);
+		if (foundEmployee == null)
+			throw new EmployeeNotFoundException(id);
+		else {
+			foundEmployee.setName(newEmployee.getName());
+			foundEmployee.setRole(newEmployee.getRole());
+			
+			return repository.save(foundEmployee);
+		}
 	}
 }

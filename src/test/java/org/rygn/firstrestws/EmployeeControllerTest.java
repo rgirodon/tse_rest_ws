@@ -60,7 +60,7 @@ public class EmployeeControllerTest {
 	@Test
 	public void testNewEmployee() throws Exception {
 		
-		Employee employee = new Employee("Rémy Girodon", "developer");
+		Employee employee = new Employee(3L, "Rémy Girodon", "developer");
 		
 		ObjectMapper mapper = new ObjectMapper();
         byte[] employeeAsBytes = mapper.writeValueAsBytes(employee);
@@ -97,7 +97,7 @@ public class EmployeeControllerTest {
 	@Test
 	public void testDeleteEmployee() throws Exception {
 		
-		Employee employee = new Employee("Rémy Girodon", "developer");
+		Employee employee = new Employee(3L, "Rémy Girodon", "developer");
 		
 		employeeRepository.save(employee);
 		
@@ -125,7 +125,7 @@ public class EmployeeControllerTest {
 	@Test
 	public void testReplaceEmployee() throws Exception {
 		
-		Employee employee = new Employee("Bilbo Baggins", "vendor");
+		Employee employee = new Employee(1L, "Bilbo Baggins", "vendor");
 		
 		ObjectMapper mapper = new ObjectMapper();
         byte[] employeeAsBytes = mapper.writeValueAsBytes(employee);
@@ -137,7 +137,7 @@ public class EmployeeControllerTest {
 				.contentType(MediaType.APPLICATION_JSON).content(employeeAsBytes))
 				.andExpect(status().isOk());
         
-        employee = employeeRepository.findById(1L).orElse(null);
+        employee = employeeRepository.findById(1L);
         
         if (employee == null) {
         	
