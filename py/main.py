@@ -1,16 +1,21 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
+
+class Team(BaseModel):
+    id: int
+    name: str
 
 app = FastAPI()
 
 data = {
     'teams': [
-        'Paris SG',
-        'Olympique Lyonnais',
-        'Olympique Marseille',
-        'AS Monaco',
-        'RC Lens',
-        'Lille Olympique SC',
-        'RC Strasbourg']
+        Team(id=1, name='Paris SG'),
+        Team(id=2, name='Olympique Lyonnais'),
+        Team(id=3, name='Olympique Marseille'),
+        Team(id=4, name='AS Monaco'),
+        Team(id=5, name='RC Lens'),
+        Team(id=6, name='Lille Olympique SC'),
+        Team(id=7, name='RC Strasbourg')]
 }
 
 @app.get("/teams")
@@ -18,37 +23,39 @@ def get_teams():
     # renvoyer nos données et 200 code OK
     return data["teams"]
 
-@app.get("/teams/{idx}")
-def get_team(idx: int):
-    # si la team est présente, supprimez-la
-    if (idx <= (len(data['teams']) - 1)):
+@app.get("/teams/{id}")
+def get_team(id: int):
 
-        # envoyer nos données et 200 code OK
-        return data['teams'][idx]
-    
-    # si la team n'est pas présente, renvoyez simplement la réponse
-    else:
-        return {'message': "Team does not exist"}
-    
+    result = {'message': "Team does not exist"}
+
+    for team in data["teams"]:
+        if (team.id == id):
+            result = team 
+
+    return result
+
+
 @app.post("/teams")
-def post_team(team: str):
-    # si le team est déjà présent, nous ne l'ajoutons pas aux données
-    if team in data['teams']:
-        # donc retourner simplement la réponse avec un message disant qu'il existe déjà
-        return {'message': "Team already exists"}
-    
-    # par contre si la team n'est pas présente, nous ajoutons la team aux données
-    else:
-        data['teams'].append(team)
+def post_team(team: Team):
 
-        # réponse de retour
-        return {'message': "Team added"}
+    data['teams'].append(team)
 
-@app.delete("/teams/{idx}")
-def delete_team(idx: int):
+    # réponse de retour
+    return {'message': "Team added"}
+
+
+@app.delete("/teams/{id}")
+def delete_team(id: int):
+
+    team_to_delete = False
+
+    for team in data["teams"]:
+        if (team.id == id):
+            team_to_delete = team 
+
     # si la team est présente, supprimez-la
-    if (idx <= (len(data['teams']) - 1)):
-        data['teams'].pop(idx)
+    if (team_to_delete):
+        data['teams'].remove(team_to_delete)
 
         # réponse de retour confirmant la suppression
         return {'message':'Team deleted'}
@@ -57,11 +64,21 @@ def delete_team(idx: int):
     else:
         return {'message': "Team does not exist"}
 
-@app.put("/teams/{idx}")
-def update_team(idx: int, team: str):
-    # si la team est présente, modifiez-la
-    if (idx <= (len(data['teams']) - 1)):
-        data['teams'][idx] = team
+
+@app.put("/teams/{id}")
+def update_team(id: int, team: Team):
+
+    team_updated = False
+
+    for current_team in data["teams"]:
+        if (current_team.id == id):
+
+            current_team.name = team.name
+
+            team_updated = True 
+
+    # si la team est présente, supprimez-la
+    if (team_updated):
 
         # réponse de retour confirmant la suppression
         return {'message':'Team updated'}
@@ -69,3 +86,4 @@ def update_team(idx: int, team: str):
     # si la team n'est pas présente, renvoyez simplement la réponse
     else:
         return {'message': "Team does not exist"}
+
