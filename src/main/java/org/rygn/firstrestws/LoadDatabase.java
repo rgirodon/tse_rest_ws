@@ -17,12 +17,20 @@ public class LoadDatabase {
 	}
 
 	@Bean
-	CommandLineRunner initDatabase(EmployeeRepository repository) {
+	CommandLineRunner initDatabase(EmployeeRepository employeeRepository, ProductRepository productRepository) {
 		return args -> {
 			
-			this.log.info("Preloading " + repository.save(new Employee(1L, "Bilbo Baggins", "maçon")));
+			this.log.info("Preloading " + employeeRepository.save(new Employee(1L, "Bilbo Baggins", "maçon")));
 			
-			this.log.info("Preloading " + repository.save(new Employee(2L, "Frodo Baggins", "infirmier")));
+			this.log.info("Preloading " + employeeRepository.save(new Employee(2L, "Frodo Baggins", "infirmier")));
+			
+			this.log.info("Preloading " + productRepository.save(new Product(1L, "TV OLED Philips", 899.9D, null)));
+			
+			this.log.info("Preloading " + productRepository.save(new Product(2L, "TV OLED Samsung", 999.9D, 10.0D)));
+			
+			this.log.info("Preloading " + productRepository.save(new Product(3L, "TV OLED LG", 1099.9D, null)));	
+			
+			this.log.info("Preloading " + productRepository.save(new Product(4L, "TV OLED Panasonic", 1199.9D, 5.0D)));
 		};
 	}
 }
