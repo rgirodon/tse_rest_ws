@@ -12,7 +12,7 @@ public class AuthenticationService {
 
     private static final String AUTH_TOKEN_HEADER_NAME = "X-API-KEY";
     
-    private static final String AUTH_TOKEN = "rgirodon";
+    private static final String AUTH_TOKEN = "telecom_saint_etienne!";
 
     public Authentication getAuthentication(HttpServletRequest request) {
         

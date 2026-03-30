@@ -28,7 +28,7 @@ public class ProductController {
 	}
 	
 	@PostMapping("/products")
-	Product newEmployee(@RequestBody Product newProduct) {
+	Product newProduct(@RequestBody Product newProduct) {
 		
 	    return repository.save(newProduct);
 	}
@@ -45,7 +45,7 @@ public class ProductController {
 	}
 	
 	@DeleteMapping("/products/{id}")
-	void deleteEmployee(@PathVariable Long id) {
+	void deleteProduct(@PathVariable Long id) {
 		repository.deleteById(id);
 	}
 	
